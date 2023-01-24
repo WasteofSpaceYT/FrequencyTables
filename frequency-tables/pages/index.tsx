@@ -4,28 +4,13 @@ import Image from 'next/image'
 import { useState } from 'react'
 import styles from '../styles/Home.module.css'
 const plotlyKey = "f7ds9igE5o9oA9J84yuH"
+import dynamic from "next/dynamic";
 //@ts-ignore
-import Plot from "react-plotlyjs"
-let plotly = require('plotly')("WasteofSpaceYT", plotlyKey);
+const Plot = dynamic(() => import("../components/bar").then(module => module.default), { ssr: false });
 
 
 
 const Home: NextPage = () => {
-  var data = [
-    {
-      x: ["giraffes", "orangutans", "monkeys"],
-      y: [20, 14, 23],
-      type: "bar"
-    }
-  ];
-  var graphOptions = {filename: "basic-bar", fileopt: "overwrite"};
-  plotly.plot(data, graphOptions, function (err: any, msg: any) {
-    if(msg != null){
-      console.log(msg.url)
-      setChartUrl(msg.url)
-    }
-  });
-  
   let [tableType, setTableType] = useState("frequency")
   let [tableVal, setTableVal] = useState("")
   let [chartUrl, setChartUrl] = useState("")
@@ -49,27 +34,15 @@ const Home: NextPage = () => {
     } else {
       table = getFrequencyTable(data);
     }
-    setTableVal(JSON.stringify(table).split(",").join("\n").replace("{", "").replace("}", "").replaceAll("&comma;", ","))
-    console.log(table)
+    let leTable = JSON.stringify(table).split(",").join("\n").replaceAll("&comma;", ",")
+    setTableVal(leTable.replace("{", "").replace("}", ""))
+    let xvals = Object.keys(table)
+    for(let i in xvals) {
+      xvals[i] = xvals[i].replaceAll("&comma;", ",")
+    }
     //@ts-ignore
-    setUseX(Object.keys(table))
+    setUseX(xvals)
     setUseY(Object.values(table))
-    let dataa = [
-      {
-        x:  Object.keys(table),
-        y: Object.values(table),
-        type: "bar"
-      }
-    ];
-    var graphOptions = {filename: "basic-bar", fileopt: "overwrite"};
-    plotly.plot(dataa, graphOptions, function (err: any, msg: any) {
-      if(msg != null){
-        console.log(msg.url)
-        setChartUrl(msg.url)
-      } else {
-        setChartUrl("error")
-      }
-    });
   }
 
   const getFrequencyTable = (data: String[]) => {
@@ -158,7 +131,6 @@ const Home: NextPage = () => {
       </Head>
       <div style={{width: "100%", height: "100%", textAlign: 'center'}}>
       <h1>Frequency Tables</h1>
-      <p>{chartUrl}</p>
       <form onSubmit={handleFormSubmit}>
       <textarea placeholder='enter your values one per line' style={{width: "25%"}} />
       <br />
@@ -169,28 +141,8 @@ const Home: NextPage = () => {
       <button style={{width: "25%"}} type="submit">Submit</button>
       </form>
       <pre style={{fontSize: "15px"}}>{tableVal}</pre>
-      <iframe width={"50%"} height={"500px"} frameBorder="0" scrolling="no" src={`https://chart-studio.plotly.com/~WasteofSpaceYT/27.embed`}></iframe>
+      <Plot useX={useX} useY={useY} />
       </div>
-      <Plot 
-      data={[
-        {
-          x: useX,
-          y: useY,
-          type: "bar"
-        }
-      ]}
-      layout={{
-        title: "Frequency Table",
-        xaxis: {
-          autorange: true,
-          title: "Date",
-          type: "date"
-        },
-        yaxis: {
-          title: "Price",
-          type: "linear"
-        }
-      }}/>
       </>
     )
 }
