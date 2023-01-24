@@ -4,6 +4,8 @@ import Image from 'next/image'
 import { useState } from 'react'
 import styles from '../styles/Home.module.css'
 const plotlyKey = "f7ds9igE5o9oA9J84yuH"
+//@ts-ignore
+import Plot from "react-plotlyjs"
 let plotly = require('plotly')("WasteofSpaceYT", plotlyKey);
 
 
@@ -27,6 +29,8 @@ const Home: NextPage = () => {
   let [tableType, setTableType] = useState("frequency")
   let [tableVal, setTableVal] = useState("")
   let [chartUrl, setChartUrl] = useState("")
+  let [useX, setUseX] = useState([])
+  let [useY, setUseY] = useState([])
 
   const handleFormSubmit = (e: any) => {
     e.preventDefault()
@@ -47,6 +51,9 @@ const Home: NextPage = () => {
     }
     setTableVal(JSON.stringify(table).split(",").join("\n").replace("{", "").replace("}", "").replaceAll("&comma;", ","))
     console.log(table)
+    //@ts-ignore
+    setUseX(Object.keys(table))
+    setUseY(Object.values(table))
     let dataa = [
       {
         x:  Object.keys(table),
@@ -164,6 +171,26 @@ const Home: NextPage = () => {
       <pre style={{fontSize: "15px"}}>{tableVal}</pre>
       <iframe width={"50%"} height={"500px"} frameBorder="0" scrolling="no" src={`https://chart-studio.plotly.com/~WasteofSpaceYT/27.embed`}></iframe>
       </div>
+      <Plot 
+      data={[
+        {
+          x: useX,
+          y: useY,
+          type: "bar"
+        }
+      ]}
+      layout={{
+        title: "Frequency Table",
+        xaxis: {
+          autorange: true,
+          title: "Date",
+          type: "date"
+        },
+        yaxis: {
+          title: "Price",
+          type: "linear"
+        }
+      }}/>
       </>
     )
 }
