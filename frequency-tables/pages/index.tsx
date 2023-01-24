@@ -3,8 +3,24 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { useState } from 'react'
 import styles from '../styles/Home.module.css'
+const plotlyKey = "f7ds9igE5o9oA9J84yuH"
+let plotly = require('plotly')("WasteofSpaceYT", plotlyKey);
+
+
 
 const Home: NextPage = () => {
+  var data = [
+    {
+      x: ["giraffes", "orangutans", "monkeys"],
+      y: [20, 14, 23],
+      type: "bar"
+    }
+  ];
+  var graphOptions = {filename: "basic-bar", fileopt: "overwrite"};
+  plotly.plot(data, graphOptions, function (err: any, msg: any) {
+      console.log(msg);
+  });
+  
   let [tableType, setTableType] = useState("frequency")
   let [tableVal, setTableVal] = useState("")
 
