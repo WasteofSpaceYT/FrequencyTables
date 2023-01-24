@@ -58,6 +58,7 @@ const Deviation = () => {
       </Head>
       <div style={{width: "100%", height: "100%", textAlign: 'center'}}>
       <h1>Deviation</h1>
+      <p>Put one value per line</p>
       <form onSubmit={handleFormSubmit}>
       <textarea placeholder='enter your values one per line' style={{width: "25%"}} />
       <br />
