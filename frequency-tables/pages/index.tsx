@@ -18,11 +18,15 @@ const Home: NextPage = () => {
   ];
   var graphOptions = {filename: "basic-bar", fileopt: "overwrite"};
   plotly.plot(data, graphOptions, function (err: any, msg: any) {
-      console.log(msg);
+    if(msg != null){
+      console.log(msg.url)
+      setChartUrl(msg.url)
+    }
   });
   
   let [tableType, setTableType] = useState("frequency")
   let [tableVal, setTableVal] = useState("")
+  let [chartUrl, setChartUrl] = useState("")
 
   const handleFormSubmit = (e: any) => {
     e.preventDefault()
@@ -43,6 +47,22 @@ const Home: NextPage = () => {
     }
     setTableVal(JSON.stringify(table).split(",").join("\n").replace("{", "").replace("}", "").replaceAll("&comma;", ","))
     console.log(table)
+    let dataa = [
+      {
+        x:  Object.keys(table),
+        y: Object.values(table),
+        type: "bar"
+      }
+    ];
+    var graphOptions = {filename: "basic-bar", fileopt: "overwrite"};
+    plotly.plot(dataa, graphOptions, function (err: any, msg: any) {
+      if(msg != null){
+        console.log(msg.url)
+        setChartUrl(msg.url)
+      } else {
+        setChartUrl("error")
+      }
+    });
   }
 
   const getFrequencyTable = (data: String[]) => {
@@ -131,6 +151,7 @@ const Home: NextPage = () => {
       </Head>
       <div style={{width: "100%", height: "100%", textAlign: 'center'}}>
       <h1>Frequency Tables</h1>
+      <p>{chartUrl}</p>
       <form onSubmit={handleFormSubmit}>
       <textarea placeholder='enter your values one per line' style={{width: "25%"}} />
       <br />
@@ -141,6 +162,7 @@ const Home: NextPage = () => {
       <button style={{width: "25%"}} type="submit">Submit</button>
       </form>
       <pre style={{fontSize: "15px"}}>{tableVal}</pre>
+      <iframe width={"50%"} height={"500px"} frameBorder="0" scrolling="no" src={`https://chart-studio.plotly.com/~WasteofSpaceYT/27.embed`}></iframe>
       </div>
       </>
     )
