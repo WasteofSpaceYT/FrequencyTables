@@ -8,7 +8,34 @@ import dynamic from "next/dynamic";
 //@ts-ignore
 const Plot = dynamic(() => import("../components/bar").then(module => module.default), { ssr: false });
 
-
+export const getFrequencyTable = (data: String[]) => {
+  let table = {}
+  let allValuesAreNumbers = true
+  data.forEach((value) => {
+    if(isNaN(Number(value))) {
+      allValuesAreNumbers = false
+    }
+    //@ts-ignore
+    if(table[value]) {
+      //@ts-ignore
+      table[value]++
+    } else {
+      //@ts-ignore
+      table[value] = 1
+    }
+  })
+  if(allValuesAreNumbers) {
+    let sortedTable = {}
+    let sortedKeys = Object.keys(table).sort((a, b) => Number(a) - Number(b))
+    sortedKeys.forEach((key) => {
+      //@ts-ignore
+      sortedTable[key] = table[key]
+    })
+    return sortedTable
+  } else {
+  return table
+  }
+}
 
 const Home: NextPage = () => {
   let [tableType, setTableType] = useState("frequency")
@@ -43,35 +70,6 @@ const Home: NextPage = () => {
     //@ts-ignore
     setUseX(xvals)
     setUseY(Object.values(table))
-  }
-
-  const getFrequencyTable = (data: String[]) => {
-    let table = {}
-    let allValuesAreNumbers = true
-    data.forEach((value) => {
-      if(isNaN(Number(value))) {
-        allValuesAreNumbers = false
-      }
-      //@ts-ignore
-      if(table[value]) {
-        //@ts-ignore
-        table[value]++
-      } else {
-        //@ts-ignore
-        table[value] = 1
-      }
-    })
-    if(allValuesAreNumbers) {
-      let sortedTable = {}
-      let sortedKeys = Object.keys(table).sort((a, b) => Number(a) - Number(b))
-      sortedKeys.forEach((key) => {
-        //@ts-ignore
-        sortedTable[key] = table[key]
-      })
-      return sortedTable
-    } else {
-    return table
-    }
   }
 
   const getHistogramData = (data: String[], interval: String) => {
