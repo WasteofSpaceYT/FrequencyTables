@@ -43,6 +43,7 @@ const Home: NextPage = () => {
   let [chartUrl, setChartUrl] = useState("")
   let [useX, setUseX] = useState([])
   let [useY, setUseY] = useState([])
+  let [relFreq, setRelFreq] = useState("")
 
   const handleFormSubmit = (e: any) => {
     e.preventDefault()
@@ -67,6 +68,13 @@ const Home: NextPage = () => {
     for(let i in xvals) {
       xvals[i] = xvals[i].replaceAll("&comma;", ",")
     }
+    let temprelfreq = {}
+    for(let i in table) {
+    let vals = Object.values(table)
+    //@ts-ignore
+    temprelfreq[i] = String((vals[i -1] / vals.reduce((a, b) => a + b, 0)) * 100) + "%"
+    }
+    setRelFreq(JSON.stringify(temprelfreq).split(",").join("\n").replaceAll("&comma;", ",").replace("{", "").replace("}", ""))
     //@ts-ignore
     setUseX(xvals)
     setUseY(Object.values(table))
@@ -140,6 +148,7 @@ const Home: NextPage = () => {
       <button style={{width: "25%"}} type="submit">Submit</button>
       </form>
       <pre style={{fontSize: "15px"}}>{tableVal}</pre>
+      <pre style={{fontSize: "15px"}}>{relFreq}</pre>
       <Plot useX={useX} useY={useY} />
       </div>
       </>
