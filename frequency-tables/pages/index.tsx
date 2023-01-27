@@ -12,7 +12,7 @@ export const getFrequencyTable = (data: String[]) => {
   let table = {}
   let allValuesAreNumbers = true
   data.forEach((value) => {
-    if(isNaN(Number(value))) {
+    if(isInteger(Number(value))) {
       allValuesAreNumbers = false
     }
     //@ts-ignore
@@ -85,11 +85,11 @@ const Home: NextPage = () => {
     let allValuesAreNumbers = true
     let finalTable = {}
     data.forEach((value) => {
-      if(isNaN(Number(value))) {
+      if(isInteger(Number(value))) {
         allValuesAreNumbers = false
       }
     })
-    if(isNaN(Number(interval))) {
+    if(isInteger(Number(interval))) {
       return "Interval must be a number"
     }
     if(!allValuesAreNumbers) {
