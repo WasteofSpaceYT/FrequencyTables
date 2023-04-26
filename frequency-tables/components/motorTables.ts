@@ -147,6 +147,10 @@ export const wireSizes = [
   "2000",
 ];
 export const breakerSizes = [
+  "1",
+  "3",
+  "6",
+  "10",
   "15",
   "20",
   "25",
@@ -173,9 +177,19 @@ export const breakerSizes = [
   "450",
   "500",
   "600",
+  "601",
   "700",
   "800",
   "1000",
+  "1200",
+  "1600",
+  "2000",
+  "2500",
+  "3000",
+  "4000",
+  "5000",
+  "6000",
+
 ];
 export const breakerTypes = {
   "Nontime Delay": 3,
