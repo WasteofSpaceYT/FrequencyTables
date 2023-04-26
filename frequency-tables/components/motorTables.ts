@@ -197,4 +197,6 @@ export const breakerTypes = {
   "Instantaneous": 8,
   "Inverse-time": 2.5,
 };
-export const threePhase
+export const threePhase = {
+  
+}
