@@ -29,10 +29,12 @@ const MotorControls = () => {
     let temp = e.target[5].value;
     let sf = e.target[6].value;
     let FLC: number;
-    let voltage: voltage = e.target[3].value;
+    let voltage = e.target[3].value;
     if ((Phase = "single")) {
+        //@ts-ignore
       FLC = singlePhase[voltage][Horsepower];
     } else {
+        //@ts-ignore
       FLC = threePhase[voltage][Horsepower];
     }
     setFLC(FLC);
